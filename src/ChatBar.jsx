@@ -5,40 +5,47 @@ class ChatBar extends Component {
     super(props);
     this.state = {
       username: this.props.currentUser,
-      message: ""
+      content: ""
     }
   }
 
   handleMessage = (e) => {
     this.setState({
-      username: this.state.username,
-      message: e.target.value
+      content: e.target.value
     })
   }
 
-  handleKeyDown = (e) => {
+  handleKeyDownName = (e) => {
+    if (e.key === "Tab" || e.key === "Enter") {
+      if(this.props.currentUser !== this.state.username) {
+        this.props.updateName(this.state, "postNotification");
+      }
+    }
+  }
+
+  handleKeyDownMsg = (e) => {
     if (e.key === 'Enter') {
-      this.props.addMessage(this.state.message);
-      this.props.updateName(this.state.username);
+      if(this.props.currentUser !== this.state.username) {
+        this.props.updateName(this.state, "postNotification");
+      }
+      this.props.addMessage(this.state, "postMessage");
       this.setState({
-        username: this.state.username,
-        message: ""
-      });
+        content: ""
+      })
     }
   }
 
   updateName = (e) => {
     this.setState({
-      username: e.target.value,
-      message: this.state.message
+      username: e.target.value
     })
   }
 
   render() {
     return (
       <footer className="chatbar" >
-          <input onKeyUp={this.updateName} name="name" className="chatbar-username" placeholder="Your Name (Optional)" defaultValue={this.state.username} />
-          <input onChange={this.handleMessage} onKeyDown={this.handleKeyDown} name="message" className="chatbar-message" placeholder="Type a message and hit ENTER" value={this.state.message} />
+          <input onKeyUp={this.updateName} onKeyDown={this.handleKeyDownName} name="name" className="chatbar-username" placeholder="Your Name (Optional)" defaultValue={this.state.username} />
+          <input onChange={this.handleMessage} onKeyDown={this.handleKeyDownMsg} name="message" className="chatbar-message" placeholder="Type a message and hit ENTER" value={this.state.content} />
       </footer>
     )
   }
