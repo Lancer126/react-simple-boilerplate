@@ -9,12 +9,14 @@ class ChatBar extends Component {
     }
   }
 
+  //Handles the written message
   handleMessage = (e) => {
     this.setState({
       content: e.target.value
     })
   }
 
+  //Handles the key down for the Name
   handleKeyDownName = (e) => {
     if (e.key === "Tab" || e.key === "Enter") {
       if(this.props.currentUser !== this.state.username) {
@@ -23,6 +25,7 @@ class ChatBar extends Component {
     }
   }
 
+  //Handles the key down for the Message
   handleKeyDownMsg = (e) => {
     if (e.key === 'Enter') {
       if(this.props.currentUser !== this.state.username) {
@@ -35,6 +38,7 @@ class ChatBar extends Component {
     }
   }
 
+  //Handles the name
   updateName = (e) => {
     this.setState({
       username: e.target.value

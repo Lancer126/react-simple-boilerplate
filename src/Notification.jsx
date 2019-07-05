@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 
 function Notification(props) {
   return (
-  <div className="notification">
-    <span className="notification-content">{props.message}</span>
+  <div className="message-system">
+    <span>{props.message}</span>
   </div>
   );
 }

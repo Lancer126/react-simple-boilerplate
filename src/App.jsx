@@ -11,20 +11,16 @@ class App extends Component {
       currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [
         {
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-          id: uuid.v4(),
-          type: "incomingMessage"
-        },
-        {
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good.",
+          username: "Chatty",
+          content: "Welcome to Chatty App!", //greets the users
           id: uuid.v4(),
           type: "incomingMessage"
         }
       ],
       usersAmount: 0
     }
+
+    //Initializes the socket server
     this.SocketServer = new WebSocket('ws://localhost:3001');
   }
 
@@ -33,6 +29,7 @@ class App extends Component {
     this.SocketServer.send(JSON.stringify(msg));
   };
 
+  //Adds a message in the state
   createMessage = (message, type) => {
     if(type === "postMessage") {
       message.type = "incomingMessage";
@@ -45,6 +42,7 @@ class App extends Component {
     this.setState({ messages: newMessages });
   }
 
+  //Does something with the received messages
   handleOnMessage = (event) => {
     // We need to parse the incoming message
     const incomingMessage = JSON.parse(event.data);
@@ -58,25 +56,29 @@ class App extends Component {
     
   };
 
+  //After the component mounted, checks for new messages and sends them to handleOnMessage
   componentDidMount() {
     this.SocketServer.onmessage = this.handleOnMessage;
   }
 
+  //Broadcasts the message to everyone
   addMessage = (state, type) => {
     state.type = type;
     this.sendNotification(state);
   }
 
-  updateName = (state, type) => {
+  //Updates the name in the state and send a notification to all users
+  updateName = (ChatState, type) => {
     const notificationMsg = `${
       this.state.currentUser.name ? this.state.currentUser.name : "Anonymous"
-    } has changed their name to ${state.username ? state.username : "Anonymous"}`;
-    let newObj = {...state, content: notificationMsg, type: type};
+    } has changed their name to ${ChatState.username ? ChatState.username : "Anonymous"}`;
+    let newObj = {...ChatState, content: notificationMsg, type: type};
     this.sendNotification(newObj);
 
-    this.setState({ currentUser: {name: state.username }});
+    this.setState({ currentUser: {name: ChatState.username }});
   }
 
+  //Shows the header, messages and chatbar
   render() {
     return (
       <div>
